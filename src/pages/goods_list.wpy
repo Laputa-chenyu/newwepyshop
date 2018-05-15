@@ -1,0 +1,20 @@
+<style lang="less">
+</style>
+<template>
+  <view class="container">
+    GoodsList
+  </view>
+</template>
+
+<script>
+  import wepy from 'wepy'
+
+  export default class GoodsList extends wepy.page {
+    config = {
+      navigationBarTitleText: '优show'
+    }
+    onLoad() {
+      console.log('onLoad')
+    }
+  }
+</script>

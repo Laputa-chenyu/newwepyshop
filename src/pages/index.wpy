@@ -1,0 +1,204 @@
+<style lang="less">
+// 轮播图
+.swiper {
+  width: 750rpx;
+  height: 340rpx;
+  // 继承父级选择器名字
+  &-img {
+    width: 750rpx;
+    height: 340rpx;
+  }
+}
+// 导航栏
+.nav {
+  background-color: #fff;
+  display: flex;
+  &-item {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    padding: 24rpx 0 30rpx;
+  }
+  &-img {
+    width: 128rpx;
+    height: 140rpx;
+  }
+}
+// 楼层
+.floor {
+  margin-top: 30rpx;
+  &-head {
+    &-img {
+      width: 750rpx;
+      height: 59rpx;
+    }
+  }
+  &-body {
+    background-color: #fff;
+    padding: 15rpx 11rpx;
+    display: flex;
+    &-left {
+      margin-right: 10rpx;
+      width: 232rpx;
+      height: 386rpx;
+      &-img {
+        width: 232rpx;
+        height: 386rpx;
+        margin: 5rpx;
+      }
+    }
+    &-right {
+      display: flex;
+      flex-wrap: wrap;
+      &-img {
+        width: 233rpx;
+        height: 188rpx;
+        margin: 5rpx;
+      }
+    }
+  }
+}
+</style>
+<template>
+  <view class="container">
+  <!-- 轮播图 -->
+    <swiper class="swiper" indicator-dots autoplay circular indicator-color="rgba(255,255,255,0.4)" indicator-active-color="#fff">
+      <block wx:for="{{ swiperArr }}" wx:key="index">
+        <swiper-item>
+          <navigator>
+            <image class="swiper-img" src="{{item.image_src}}"></image>
+          </navigator>
+        </swiper-item>
+      </block>
+    </swiper>
+    <!-- 导航栏 -->
+    <view class="nav">
+      <block wx:for="{{ navArr }}" wx:key="index">
+        <navigator class="nav-item" hover-class="none" url="{{item.navigator_url}}" open-type="{{item.open_type}}">
+          <image src="{{item.image_src}}" class="nav-img"></image>
+        </navigator>
+      </block>
+    </view>
+    <!-- 楼层 -->
+    <block wx:for="{{floorArr}}" wx:key="index">
+      <view class="floor">
+        <view class="floor-head">
+          <navigator class="floor-head-item" hover-class="none">
+            <image class="floor-head-img" src="{{item.floor_title.image_src}}"></image>
+          </navigator>
+        </view>
+        <view class="floor-body">
+          <view class="floor-body-left">
+            <navigator class="floor-body-item">
+              <image class="floor-body-left-img" src="{{}}"></image>
+            </navigator>
+          </view>
+          <view class="floor-body-right">
+            <navigator class="floor-body-item">
+              <image class="floor-body-right-img" src="../upload/pic_floor01_2@2x.png"></image>
+            </navigator>
+            <navigator class="floor-body-item">
+              <image class="floor-body-right-img" src="../upload/pic_floor01_3@2x.png"></image>
+            </navigator>
+            <navigator class="floor-body-item">
+              <image class="floor-body-right-img" src="../upload/pic_floor01_4@2x.png"></image>
+            </navigator>
+            <navigator class="floor-body-item">
+              <image class="floor-body-right-img" src="../upload/pic_floor01_5@2x.png"></image>
+            </navigator>
+          </view>
+        </view>
+      </view>
+    </block>
+  </view>
+</template>
+
+<script>
+import wepy from 'wepy'
+// 导入 api 接口函数对象集合
+import api from '../api/api'
+export default class Index extends wepy.page {
+  config = {
+    navigationBarTitleText: '优购'
+  }
+  data = {
+    // 轮播图
+    swiperArr: [],
+    // 导航栏
+    navArr: [],
+    // 楼层
+    floorArr: []
+    // floorTitle: {},
+    // floorProduct: []
+  }
+  onLoad() {
+    console.log('onLoad')
+    console.log(api)
+
+  // 调用请求轮播图的API 函数
+    api.getHomeSwiper().then(res => {
+      this.swiperArr = res.data
+      this.$apply()
+    })
+
+    // 轮播图
+    // wepy.request({
+    //   url: 'https://itjustfun.cn/api/public/v1/home/swiperdata', // 开发者服务器接口地址",
+    //   // data: 'data', // 请求的参数",
+    //   method: 'GET',
+    //   dataType: 'json' // 如果设为json，会尝试对返回的数据做一次 JSON.parse
+    //   // success: res => {
+    //   //   // console.log(res)
+    //   //   if (res.data.meta.status === 200) {
+    //   //     this.swiperArr = res.data.data
+    //   //   }
+    //   //   this.$apply()
+    //   // }
+    // })
+    // .then(res => {
+    //   // console.log(res)
+    //   if (res.data.meta.status === 200) {
+    //     this.swiperArr = res.data.data
+    //   }
+    //   this.$apply()
+    // })
+
+    // 导航栏
+    wepy.request({
+      url: 'https://itjustfun.cn/api/public/v1/home/catitems', // 开发者服务器接口地址",
+      // data: 'data', //请求的参数",
+      method: 'GET'
+      // dataType: 'json', // 如果设为json，会尝试对返回的数据做一次 JSON.parse
+      // success: res => {
+      //   // console.log(res)
+      //   this.navArr = res.data.data
+      //   this.$apply()
+      // }
+    })
+    .then(res => {
+      this.navArr = res.data.data
+      this.$apply()
+    })
+
+    // 楼层
+    wepy.request({
+      url: 'https://itjustfun.cn/api/public/v1/home/floordata', // 开发者服务器接口地址",
+      // data: 'data', // 请求的参数",
+      method: 'GET',
+      dataType: 'json', // 如果设为json，会尝试对返回的数据做一次 JSON.parse
+      success: res => {
+        // console.log(res)
+        // this.floorArr = res.data.data
+        // console.log(this.floorArr)
+        // this.$apply()
+      }
+    })
+    .then(res => {
+      console.log(res)
+      this.floorArr = res.data.data
+      console.log(this.floorArr)
+      this.$apply()
+    })
+  }
+}
+</script>
