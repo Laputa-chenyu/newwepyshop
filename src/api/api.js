@@ -12,7 +12,17 @@ const getHomeSwiper = params => {
   return wxRequest('home/swiperdata', params).then(res => res.data)
 }
 
+const getHomeNav = params => {
+  return wxRequest('home/catitems', params).then(res => res.data)
+}
+
+const getHomeFloor = params => {
+  return wxRequest('home/floordata', params).then(res => res.data)
+}
+
 // 5.把封装的API方法导出, 这里统一导出
 export default {
-  getHomeSwiper
+  getHomeSwiper,
+  getHomeNav,
+  getHomeFloor
 }
